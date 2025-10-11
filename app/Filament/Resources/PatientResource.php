@@ -9,6 +9,9 @@ use App\Filament\Resources\PatientResource\Pages;
 use App\Filament\Resources\PatientResource\RelationManagers;
 use App\Models\Owner;
 use App\Models\Patient;
+use Filament\Tables\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
@@ -17,8 +20,10 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -29,6 +34,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Filters\TextFilter;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\ImageColumn;
+
+
 
 class PatientResource extends Resource
 {
@@ -136,7 +143,7 @@ class PatientResource extends Resource
                 TextColumn::make('created_at')
                     ->label(__('patients.fields.created_at'))
                     ->sortable()
-                    ->jalaliDate()
+                    ->jalaliDate(),
 
             ])
             ->filters([
@@ -148,7 +155,20 @@ class PatientResource extends Resource
                     )
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Action::make('approve')
+                        ->label('وضعیت')
+                        ->icon('heroicon-o-check')
+                        ->color('success')
+                        ->visible(fn (Patient $record) => $record->status === 'pending')
+                        ->action(function (Patient $record) {
+                            $record->approve();
+                            Notification::make()->title('بیمار تأیید شد')->success()->send();
+                        }),
+                ])
+                ->label('عملیات'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

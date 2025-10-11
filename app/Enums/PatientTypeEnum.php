@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use Illuminate\Support\Facades\Lang;
+
 enum PatientTypeEnum: string
 {
     case CAT = 'cat';
@@ -11,11 +13,6 @@ enum PatientTypeEnum: string
 
     public function label(): string
     {
-        return match($this) {
-            self::CAT => 'گربه',
-            self::DOG => 'سگ',
-            self::RABBIT => 'خرگوش',
-            self::SNAKE => 'مار',
-        };
+        return Lang::get("enums." . self::class . "." . $this->name);
     }
 }

@@ -32,10 +32,16 @@ class Patient extends Model implements HasMedia
     }
 
 
-       public function registerMediaCollections(): void
+    public function registerMediaCollections(): void
     {
         $this->addMediaCollection('image')
              ->useDisk('public')
-             ->singleFile(); 
+             ->singleFile();
+    }
+
+
+    public function approve(){
+        $this->status='pending';
+        $this->save();
     }
 }

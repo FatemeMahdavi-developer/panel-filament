@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use Illuminate\Support\Facades\Lang;
+
 enum PatientStatusEnum: string
 {
     case PENDING = 'pending';
@@ -12,13 +14,7 @@ enum PatientStatusEnum: string
 
     public function label(): string
     {
-        return match($this) {
-            self::PENDING => 'در انتظار معاینه',
-            self::IN_SURGERY => 'در اتاق عمل',
-            self::RECOVERING => 'در حال بهبود',
-            self::CRITICAL => 'اورژانسی',
-            self::DECEASED => 'فوت شده',
-        };
+        return Lang::get("enums." . self::class . "." . $this->name);
     }
 
     public function color(): string
