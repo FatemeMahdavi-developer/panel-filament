@@ -43,6 +43,8 @@ class PatientResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-identification';
 
+    protected static ?int $navigationSort = 2;
+
     public static function getPluralModelLabel(): string
     {
         return __('modules.list.patients');
@@ -162,7 +164,7 @@ class PatientResource extends Resource
                         ->label('وضعیت')
                         ->icon('heroicon-o-check')
                         ->color('success')
-                        ->visible(fn (Patient $record) => $record->status === 'pending')
+                        ->visible(fn (Patient $record) => $record->status === 'deceased')
                         ->action(function (Patient $record) {
                             $record->approve();
                             Notification::make()->title('بیمار تأیید شد')->success()->send();

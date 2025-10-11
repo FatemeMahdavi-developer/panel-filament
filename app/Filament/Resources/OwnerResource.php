@@ -22,6 +22,8 @@ class OwnerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
+    protected static ?int $navigationSort = 1;
+
     public static function getPluralModelLabel(): string
     {
         return __('modules.list.owners');
